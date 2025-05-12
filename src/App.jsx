@@ -6,7 +6,7 @@ import ShipmentMap from "./components/ShipmentMap";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Box, Button } from "@mui/material";
-
+import TrackShip from "./components/TrackShip";
 const App = () => {
   return (
     <Router>
@@ -26,6 +26,9 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/map" element={<ShipmentMap />} />
+
+          <Route path="/track/:shipmentId" element={<TrackShip  />} />
+
         </Routes>
 
         <ToastContainer position="top-right" autoClose={3000} />

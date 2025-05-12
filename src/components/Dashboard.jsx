@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useStore } from "zustand";
 import { Shipments } from "../store/Shipment.api.js";
 import {
@@ -46,14 +47,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const Dashboard = () => {
   const { shipments, isShipmentsLoading, getAllShipments } =
     useStore(Shipments);
+
   const [openDialog, setOpenDialog] = useState(false);
-  const [selectedShipment, setSelectedShipment] = useState(null);
+  const navigate = useNavigate();
+
   useEffect(() => {
     getAllShipments(); // Fetch shipments when component mounts
   }, [getAllShipments]);
+
   const handleRowClick = (shipment) => {
-    setSelectedShipment(shipment); // ✅ Update state
-    console.log("Selected Shipment:", shipment); // ✅ Log to console
+    navigate(`/track/${shipment.shipmentId}`);
   };
 
   if (isShipmentsLoading) {
@@ -70,25 +73,32 @@ const Dashboard = () => {
   }
 
   return (
-    <Box>
+    <Box sx={{ p: 2 }}>
       <Box
         sx={{
-          marginTop: 2,
-          marginBottom: 3,
+          mb: 3,
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
         }}
       >
-        <Button variant="contained" onClick={() => setOpenDialog(true)}>
-          Add Shipment
-        </Button>
-        <Button variant="outlined" color="secondary" size="large">
-          Sort
-        </Button>
+        <Typography variant="h6">Click on a shipment to track it</Typography>
+        <Box>
+          <Button
+            variant="outlined"
+            color="secondary"
+            size="large"
+            sx={{ mr: 1 }}
+          >
+            Sort
+          </Button>
+          <Button variant="contained" onClick={() => setOpenDialog(true)}>
+            Add Shipment
+          </Button>
+        </Box>
       </Box>
 
-      {!shipments || shipments.length === 0 ? (
+      {(!shipments || shipments.length === 0) ? (
         <Typography align="center" variant="h6" sx={{ mt: 4 }}>
           No shipments found
         </Typography>
@@ -111,27 +121,16 @@ const Dashboard = () => {
                   onClick={() => handleRowClick(row)}
                   sx={{
                     cursor: "pointer",
-                    backgroundColor:
-                      selectedShipment?.shipmentId === row.shipmentId
-                        ? "#cceeff"
-                        : "inherit",
-                    "&:hover": {
-                      backgroundColor:
-                        selectedShipment?.shipmentId === row.shipmentId
-                          ? "#cceeff"
-                          : "#f5f5f5",
-                    },
-                    "&:active": {
-                      backgroundColor: "#b3e5fc", // Light blue on click
-                    },
+                    "&:hover": { backgroundColor: "#f5f5f5" },
+                    "&:active": { backgroundColor: "#b3e5fc" },
                   }}
                 >
                   <StyledTableCell>{row.shipmentId}</StyledTableCell>
                   <StyledTableCell>{row.containerId}</StyledTableCell>
                   <StyledTableCell>
-                    {row.currentLocation.location}
+                    {row.currentLocation?.location || "N/A"}
                   </StyledTableCell>
-                  <StyledTableCell>{row.eta}</StyledTableCell>
+                  <StyledTableCell>{row.eta || "N/A"}</StyledTableCell>
                   <StyledTableCell>{row.status}</StyledTableCell>
                 </StyledTableRow>
               ))}
@@ -140,7 +139,8 @@ const Dashboard = () => {
         </TableContainer>
       )}
 
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+      {/* Add Shipment Dialog */}
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} fullWidth maxWidth="sm">
         <DialogTitle>
           Add Shipment
           <IconButton

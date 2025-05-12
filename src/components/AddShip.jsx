@@ -1,9 +1,17 @@
 import * as React from "react";
-import { Box, TextField, MenuItem, Button } from "@mui/material";
+import {
+  Box,
+  TextField,
+  MenuItem,
+  Button,
+  OutlinedInput,
+  Chip,
+  Select,
+} from "@mui/material";
 import { Shipments } from "../store/Shipment.api.js";
 import { useStore } from "zustand";
 import { toast } from "react-toastify";
-import locationData from "../store/location.json"; // Adjust the path if necessary
+import locationData from "../store/location.json";
 
 const statusOptions = ["In Transit", "Delivered", "Delayed", "Pending"];
 
@@ -13,13 +21,13 @@ export default function AddShip({ onClose }) {
   const [form, setForm] = React.useState({
     shipmentId: "",
     containerId: "",
-    currentLocation: { location: "", latitude: "", longitude: "" }, // Change to an object
-    eta: new Date().toISOString().split("T")[0], // today's date
+    currentLocation: { location: "", lat: "", lng: "" },
+    eta: new Date().toISOString().split("T")[0],
     status: "Pending",
-    route: ["India"], // Example route, you can modify it as required
+    route: [],
   });
 
-  // Handles the location change to set lat, lng along with location name
+  // Handles location change
   const handleLocationChange = (e) => {
     const selectedLocation = locationData.find(
       (loc) => loc.location === e.target.value
@@ -36,6 +44,25 @@ export default function AddShip({ onClose }) {
     }
   };
 
+  // Handles route multi-select
+  const handleRouteChange = (e) => {
+    const selectedLocations = e.target.value;
+    const fullRoute = selectedLocations.map((locName) => {
+      const loc = locationData.find((l) => l.location === locName);
+      return {
+        location: loc.location,
+        lat: loc.latitude,
+        lng: loc.longitude,
+      };
+    });
+
+    setForm((prev) => ({
+      ...prev,
+      route: fullRoute,
+    }));
+  };
+
+  // Generic change
   const handleChange = (e) => {
     setForm((prev) => ({
       ...prev,
@@ -43,14 +70,13 @@ export default function AddShip({ onClose }) {
     }));
   };
 
+  // Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Make sure the form is passing lat and lng in currentLocation
-    console.log(form)
     const success = await addShipment(form);
     if (success) {
       toast.success("Shipment added successfully!");
-      if (onClose) onClose(); // Close the modal only if successful
+      if (onClose) onClose();
     } else {
       toast.error("Failed to add shipment");
     }
@@ -88,15 +114,16 @@ export default function AddShip({ onClose }) {
         required
         name="currentLocation"
         label="Current Location"
-        value={form.currentLocation.location} // Display the location name
-        onChange={handleLocationChange} // Use handleLocationChange to update lat/lng
+        value={form.currentLocation.location}
+        onChange={handleLocationChange}
       >
-        {locationData.map((location) => (
-          <MenuItem key={location.location} value={location.location}>
+        {locationData.map((location, index) => (
+          <MenuItem key={index} value={location.location}>
             {location.location}
           </MenuItem>
         ))}
       </TextField>
+
       <TextField
         name="eta"
         label="ETA"
@@ -105,6 +132,7 @@ export default function AddShip({ onClose }) {
         value={form.eta}
         onChange={handleChange}
       />
+
       <TextField
         select
         name="status"
@@ -118,6 +146,26 @@ export default function AddShip({ onClose }) {
           </MenuItem>
         ))}
       </TextField>
+
+      {/* Multi-select Route */}
+      <Select
+        multiple
+        displayEmpty
+        value={form.route.map((r) => r.location)}
+        onChange={handleRouteChange}
+        input={<OutlinedInput />}
+        renderValue={(selected) =>
+          selected.length === 0 ? "Select Route" : selected.join(", ")
+        }
+        sx={{ width: "25ch" }}
+      >
+        {locationData.map((location, index) => (
+          <MenuItem key={index} value={location.location}>
+            {location.location}
+          </MenuItem>
+        ))}
+      </Select>
+
       <Box sx={{ alignSelf: "center", mt: 1 }}>
         <Button type="submit" variant="contained" color="success">
           Submit
