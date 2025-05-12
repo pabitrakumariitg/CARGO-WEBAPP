@@ -128,9 +128,9 @@ const Dashboard = () => {
                   <StyledTableCell>{row.shipmentId}</StyledTableCell>
                   <StyledTableCell>{row.containerId}</StyledTableCell>
                   <StyledTableCell>
-                    {row.currentLocation?.location || "N/A"}
+                    {row.currentLocation?.location || "Please refresh to load this"}
                   </StyledTableCell>
-                  <StyledTableCell>{row.eta || "N/A"}</StyledTableCell>
+                  <StyledTableCell>{row.eta || "Please refresh to load this"}</StyledTableCell>
                   <StyledTableCell>{row.status}</StyledTableCell>
                 </StyledTableRow>
               ))}
