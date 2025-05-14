@@ -7,10 +7,12 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Box, Button } from "@mui/material";
 import TrackShip from "./components/TrackShip";
+import './index.css';
+
 const App = () => {
   return (
     <Router>
-      <Box sx={{ padding: 2 }}>
+      <Box sx={{ padding: 0 }}>
         <Header />
 
         {/* Optional Nav Buttons */}

@@ -6,89 +6,76 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import AdbIcon from "@mui/icons-material/Adb";
-import MenuIcon from "@mui/icons-material/Menu";
-import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 
 function Header() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
   return (
     <AppBar position="static">
-      <Box sx={{ flexGrow: 1 }}>
-        <Toolbar disableGutters>
-          {/* Logo */}
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component={Link}
-            to="/"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            CARGO
-          </Typography>
+      <Box sx={{ width: '100%' }}>
+        <Toolbar 
+          disableGutters 
+          sx={{ 
+            px: { xs: 1, sm: 2 },
+            flexDirection: { xs: 'column', sm: 'row' },
+            py: { xs: 1, sm: 0 }
+          }}
+        >
+          {/* Logo Section */}
+          <Box sx={{ 
+            display: 'flex', 
+            alignItems: 'center',
+            width: { xs: '100%', sm: 'auto' },
+            justifyContent: { xs: 'center', sm: 'flex-start' },
+            mb: { xs: 1, sm: 0 }
+          }}>
+            <AdbIcon sx={{ mr: 1 }} />
+            <Typography
+              variant="h6"
+              noWrap
+              component={Link}
+              to="/"
+              sx={{
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
+                fontSize: { xs: '1.1rem', sm: '1.25rem' }
+              }}
+            >
+              CARGO
+            </Typography>
+          </Box>
 
-          {/* Navigation buttons (centered) */}
-          <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}>
+          {/* Navigation buttons */}
+          <Box sx={{ 
+            display: "flex", 
+            justifyContent: "center",
+            width: { xs: '100%', sm: 'auto' },
+            flexGrow: { sm: 1 },
+            gap: { xs: 1, sm: 2 }
+          }}>
             <Button
               component={Link}
               to="/"
-              sx={{ my: 2, color: "white", display: "block" }}
+              sx={{ 
+                color: "white",
+                fontSize: { xs: '0.875rem', sm: '1rem' },
+                minWidth: { xs: '100px', sm: '120px' }
+              }}
             >
               Dashboard
             </Button>
             <Button
               component={Link}
               to="/map"
-              sx={{ my: 2, color: "white", display: "block" }}
+              sx={{ 
+                color: "white",
+                fontSize: { xs: '0.875rem', sm: '1rem' },
+                minWidth: { xs: '100px', sm: '120px' }
+              }}
             >
               Maps
             </Button>
-          </Box>
-
-          {/* Mobile menu icon */}
-          <Box sx={{ display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="menu"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              anchorEl={anchorElNav}
-              anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-              keepMounted
-              transformOrigin={{ vertical: "top", horizontal: "left" }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-            >
-              <MenuItem component={Link} to="/" onClick={handleCloseNavMenu}>
-                <Typography>Dashboard</Typography>
-              </MenuItem>
-              <MenuItem component={Link} to="/map" onClick={handleCloseNavMenu}>
-                <Typography>Maps</Typography>
-              </MenuItem>
-            </Menu>
           </Box>
         </Toolbar>
       </Box>

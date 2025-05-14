@@ -73,45 +73,106 @@ const Dashboard = () => {
   }
 
   return (
-    <Box sx={{ p: 2 }}>
+    <Box sx={{ width: '100%', maxWidth: '100vw', overflow: 'hidden' }}>
       <Box
         sx={{
-          mb: 3,
           display: "flex",
+          flexDirection: { xs: 'column', sm: 'row' },
           justifyContent: "space-between",
-          alignItems: "center",
+          alignItems: { xs: 'stretch', sm: 'center' },
+          gap: { xs: 2, sm: 0 },
+          px: { xs: 2, sm: 3 },
+          py: { xs: 2, sm: 2 }
         }}
       >
-        <Typography variant="h6">Click on a shipment to track it</Typography>
-        <Box>
+        <Typography 
+          variant="h6" 
+          sx={{ 
+            m: 0, 
+            p: 0,
+            fontSize: { xs: '1.1rem', sm: '1.25rem' },
+            textAlign: { xs: 'center', sm: 'left' }
+          }}
+        >
+          Click on a shipment to track it
+        </Typography>
+        <Box sx={{ 
+          display: 'flex', 
+          gap: 2,
+          justifyContent: { xs: 'center', sm: 'flex-end' }
+        }}>
           <Button
             variant="outlined"
             color="secondary"
             size="large"
-            sx={{ mr: 1 }}
+            sx={{ 
+              minWidth: { xs: '100px', sm: '120px' },
+              fontSize: { xs: '0.875rem', sm: '1rem' }
+            }}
           >
             Sort
           </Button>
-          <Button variant="contained" onClick={() => setOpenDialog(true)}>
+          <Button 
+            variant="contained" 
+            onClick={() => setOpenDialog(true)}
+            sx={{ 
+              minWidth: { xs: '140px', sm: '160px' },
+              fontSize: { xs: '0.875rem', sm: '1rem' }
+            }}
+          >
             Add Shipment
           </Button>
         </Box>
       </Box>
 
       {(!shipments || shipments.length === 0) ? (
-        <Typography align="center" variant="h6" sx={{ mt: 4 }}>
+        <Typography 
+          align="center" 
+          variant="h6" 
+          sx={{ 
+            mt: 4,
+            fontSize: { xs: '1.1rem', sm: '1.25rem' }
+          }}
+        >
           No shipments found
         </Typography>
       ) : (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 700 }} aria-label="shipment table">
+        <TableContainer 
+          component={Paper}
+          sx={{
+            mx: { xs: 1, sm: 2 },
+            mb: { xs: 2, sm: 3 },
+            overflow: 'auto'
+          }}
+        >
+          <Table 
+            sx={{ 
+              minWidth: { xs: 300, sm: 700 },
+            }} 
+            aria-label="shipment table"
+          >
             <TableHead>
               <TableRow>
-                <StyledTableCell>Shipment ID</StyledTableCell>
-                <StyledTableCell>Container ID</StyledTableCell>
-                <StyledTableCell>Current Location</StyledTableCell>
-                <StyledTableCell>ETA</StyledTableCell>
-                <StyledTableCell>Status</StyledTableCell>
+                <StyledTableCell sx={{ 
+                  whiteSpace: 'nowrap',
+                  fontSize: { xs: '0.875rem', sm: '1rem' }
+                }}>Shipment ID</StyledTableCell>
+                <StyledTableCell sx={{ 
+                  whiteSpace: 'nowrap',
+                  fontSize: { xs: '0.875rem', sm: '1rem' }
+                }}>Container ID</StyledTableCell>
+                <StyledTableCell sx={{ 
+                  whiteSpace: 'nowrap',
+                  fontSize: { xs: '0.875rem', sm: '1rem' }
+                }}>Current Location</StyledTableCell>
+                <StyledTableCell sx={{ 
+                  whiteSpace: 'nowrap',
+                  fontSize: { xs: '0.875rem', sm: '1rem' }
+                }}>ETA</StyledTableCell>
+                <StyledTableCell sx={{ 
+                  whiteSpace: 'nowrap',
+                  fontSize: { xs: '0.875rem', sm: '1rem' }
+                }}>Status</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -125,13 +186,28 @@ const Dashboard = () => {
                     "&:active": { backgroundColor: "#b3e5fc" },
                   }}
                 >
-                  <StyledTableCell>{row.shipmentId}</StyledTableCell>
-                  <StyledTableCell>{row.containerId}</StyledTableCell>
-                  <StyledTableCell>
+                  <StyledTableCell sx={{ 
+                    fontSize: { xs: '0.875rem', sm: '1rem' },
+                    padding: { xs: '8px', sm: '16px' }
+                  }}>{row.shipmentId}</StyledTableCell>
+                  <StyledTableCell sx={{ 
+                    fontSize: { xs: '0.875rem', sm: '1rem' },
+                    padding: { xs: '8px', sm: '16px' }
+                  }}>{row.containerId}</StyledTableCell>
+                  <StyledTableCell sx={{ 
+                    fontSize: { xs: '0.875rem', sm: '1rem' },
+                    padding: { xs: '8px', sm: '16px' }
+                  }}>
                     {row.currentLocation?.location || "Please refresh to load this"}
                   </StyledTableCell>
-                  <StyledTableCell>{row.eta || "Please refresh to load this"}</StyledTableCell>
-                  <StyledTableCell>{row.status}</StyledTableCell>
+                  <StyledTableCell sx={{ 
+                    fontSize: { xs: '0.875rem', sm: '1rem' },
+                    padding: { xs: '8px', sm: '16px' }
+                  }}>{row.eta || "Please refresh to load this"}</StyledTableCell>
+                  <StyledTableCell sx={{ 
+                    fontSize: { xs: '0.875rem', sm: '1rem' },
+                    padding: { xs: '8px', sm: '16px' }
+                  }}>{row.status}</StyledTableCell>
                 </StyledTableRow>
               ))}
             </TableBody>
@@ -140,13 +216,32 @@ const Dashboard = () => {
       )}
 
       {/* Add Shipment Dialog */}
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} fullWidth maxWidth="sm">
-        <DialogTitle>
+      <Dialog 
+        open={openDialog} 
+        onClose={() => setOpenDialog(false)} 
+        fullWidth 
+        maxWidth="sm"
+        sx={{
+          '& .MuiDialog-paper': {
+            margin: { xs: 2, sm: 4 },
+            width: { xs: 'calc(100% - 32px)', sm: '600px' }
+          }
+        }}
+      >
+        <DialogTitle sx={{ 
+          fontSize: { xs: '1.25rem', sm: '1.5rem' },
+          py: { xs: 1.5, sm: 2 }
+        }}>
           Add Shipment
           <IconButton
             aria-label="close"
             onClick={() => setOpenDialog(false)}
-            sx={{ position: "absolute", right: 8, top: 8 }}
+            sx={{ 
+              position: "absolute", 
+              right: 8, 
+              top: 8,
+              padding: { xs: '4px', sm: '8px' }
+            }}
           >
             <CloseIcon />
           </IconButton>
