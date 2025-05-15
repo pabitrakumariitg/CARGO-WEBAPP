@@ -16,7 +16,7 @@ import locationData from "../store/location.json";
 const statusOptions = ["In Transit", "Delivered", "Delayed", "Pending"];
 
 export default function AddShip({ onClose }) {
-  const { addShipment } = useStore(Shipments);
+  const { addShipment, getAllShipments } = useStore(Shipments);
 
   const [form, setForm] = React.useState({
     shipmentId: "",
@@ -73,7 +73,30 @@ export default function AddShip({ onClose }) {
   // Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const success = await addShipment(form);
+    
+    // Ensure all required fields are properly formatted
+    const shipmentData = {
+      shipmentId: form.shipmentId,
+      containerId: form.containerId,
+      currentLocation: form.currentLocation.location 
+        ? { 
+            location: form.currentLocation.location,
+            lat: form.currentLocation.lat || "",
+            lng: form.currentLocation.lng || ""
+          }
+        : form.currentLocation,
+      eta: form.eta,
+      status: form.status,
+      route: form.route.map(r => ({
+        location: r.location,
+        lat: r.lat || "",
+        lng: r.lng || ""
+      }))
+    };
+
+    console.log("Submitting shipment data:", shipmentData);
+    const success = await addShipment(shipmentData);
+    
     if (success) {
       toast.success("Shipment added successfully!");
       if (onClose) onClose();

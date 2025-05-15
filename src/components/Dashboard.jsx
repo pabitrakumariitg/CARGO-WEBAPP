@@ -55,6 +55,11 @@ const Dashboard = () => {
     getAllShipments(); // Fetch shipments when component mounts
   }, [getAllShipments]);
 
+  const handleDialogClose = async () => {
+    setOpenDialog(false);
+    await getAllShipments(); // Refresh shipments when dialog closes
+  };
+
   const handleRowClick = (shipment) => {
     navigate(`/track/${shipment.shipmentId}`);
   };
@@ -198,16 +203,22 @@ const Dashboard = () => {
                     fontSize: { xs: '0.875rem', sm: '1rem' },
                     padding: { xs: '8px', sm: '16px' }
                   }}>
-                    {row.currentLocation?.location || "Please refresh to load this"}
+                    {typeof row.currentLocation === 'string' 
+                      ? row.currentLocation 
+                      : row.currentLocation?.location || "Location not available"}
                   </StyledTableCell>
                   <StyledTableCell sx={{ 
                     fontSize: { xs: '0.875rem', sm: '1rem' },
                     padding: { xs: '8px', sm: '16px' }
-                  }}>{row.eta || "Please refresh to load this"}</StyledTableCell>
+                  }}>
+                    {row.eta || "ETA not available"}
+                  </StyledTableCell>
                   <StyledTableCell sx={{ 
                     fontSize: { xs: '0.875rem', sm: '1rem' },
                     padding: { xs: '8px', sm: '16px' }
-                  }}>{row.status}</StyledTableCell>
+                  }}>
+                    {row.status || "Status not available"}
+                  </StyledTableCell>
                 </StyledTableRow>
               ))}
             </TableBody>
@@ -218,7 +229,7 @@ const Dashboard = () => {
       {/* Add Shipment Dialog */}
       <Dialog 
         open={openDialog} 
-        onClose={() => setOpenDialog(false)} 
+        onClose={handleDialogClose}
         fullWidth 
         maxWidth="sm"
         sx={{
@@ -235,7 +246,7 @@ const Dashboard = () => {
           Add Shipment
           <IconButton
             aria-label="close"
-            onClick={() => setOpenDialog(false)}
+            onClick={handleDialogClose}
             sx={{ 
               position: "absolute", 
               right: 8, 
@@ -247,7 +258,7 @@ const Dashboard = () => {
           </IconButton>
         </DialogTitle>
         <DialogContent>
-          <AddShip onClose={() => setOpenDialog(false)} />
+          <AddShip onClose={handleDialogClose} />
         </DialogContent>
       </Dialog>
     </Box>
